@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Sign In</title>
+<style>
+    /* Your CSS styles go here */
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        width: 300px;
+        margin: 100px auto;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"], input[type="phone"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+
+    input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+    .login-btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: #333;
+        color: white;
+        cursor: pointer;
+    }
+    .admin-link {
+        display: block;
+        text-align: right;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <form action="{{ url_for('client_sign_in') }}" method="post">
+        <input type="phone" name="phone" placeholder="Номер телефона" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <input type="submit" value="Войти" class="login-btn">
+        <a href="{{ url_for('adminSignIn') }}" class="admin-link">Вход для администраторов</a>
+    </form>
+</div>
+
+</body>
+</html>

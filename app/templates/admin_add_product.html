@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить товар в запрос</title>
+    <style>
+  /* Стилизация для имитации внешнего вида на скриншоте */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6e6e6;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Тень для контейнера */
+  }
+  .header {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .product-list {
+    list-style: none;
+    padding: 0;
+  }
+  .product-list li {
+    background-color: #f2f2f2;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+  }
+  .add-button {
+    padding: 5px 10px;
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        Добавить товар в запрос
+    </div>
+    <div class="client-wish">
+        Пожелания клиента: {{ application[0] }}
+    </div>
+    <ul class="product-list">
+        <!-- Add Product Button -->
+        <li>
+            <a href="{{ url_for('addProduct') }}" class="add-button">Добавить товар</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

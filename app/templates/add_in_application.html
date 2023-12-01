@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список товаров</title>
+    <style>
+  /* Стилизация для имитации внешнего вида на скриншоте */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6e6e6;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Тень для контейнера */
+  }
+  .header {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .product-list {
+    list-style: none;
+    padding: 0;
+  }
+  .product-list li {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr 0.5fr; /* Распределение места между колонками */
+  gap: 10px; /* Отступ между колонками */
+  align-items: center;
+  background-color: #f2f2f2;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  }
+  /* Стилизация для формы добавления продукта */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; /* Ширина модального окна */
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .modal-content {
+    text-align: center;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-label {
+    margin-bottom: 10px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .form-button {
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .add-button {
+    background-color: #e6e6e6;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Модальное окно для формы добавления продукта -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <button onclick="closeModal()" style="float: right;">&times;</button>
+            <div class="header">
+                Добавление продукта
+            </div>
+            <form action="{{ url_for('add_product') }}" method="post">
+                <label class="form-label" for="product_cost">Стоимость продукта:</label>
+                <input class="form-input" type="number" id="product_cost" name="product_cost" required>
+
+                <label class="form-label" for="product_brand">Бренд продукта:</label>
+                <input class="form-input" type="text" id="product_brand" name="product_brand" required>
+
+                <label class="form-label" for="product_specifications">Характеристики продукта:</label>
+                <input class="form-input" type="text" id="product_specifications" name="product_specifications"
+                       required>
+
+                <label class="form-label" for="product_availability">Доступность продукта:</label>
+                <input class="form-input" type="checkbox" id="product_availability" name="product_availability">
+
+                <button class="form-button" type="submit">Добавить продукт</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования продукта -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <button onclick="closeEditModal()" style="float: right;">&times;</button>
+            <div class="header">Редактирование продукта</div>
+            <form id="editForm" action="{{ url_for('edit_product') }}" method="post">
+                <input type="hidden" id="edit_product_id" name="product_id">
+                <label class="form-label" for="edit_product_cost">Стоимость продукта:</label>
+                <input class="form-input" type="number" id="edit_product_cost" name="product_cost" required>
+
+                <label class="form-label" for="edit_product_brand">Бренд продукта:</label>
+                <input class="form-input" type="text" id="edit_product_brand" name="product_brand" required>
+
+                <label class="form-label" for="edit_product_specifications">Характеристики продукта:</label>
+                <input class="form-input" type="text" id="edit_product_specifications" name="product_specifications"
+                       required>
+
+                <label class="form-label" for="edit_product_availability">Доступность продукта:</label>
+                <input class="form-input" type="checkbox" id="edit_product_availability" name="product_availability">
+                <button class="form-button" type="submit">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="header">
+        Товары
+    </div>
+    {% for product in products %}
+    <ul class="product-list">
+        <li>
+            <span>{{ product[3] }}</span> <!-- Product specifications -->
+            <span>{{ product[2] }}</span> <!-- Brand -->
+            <span>{{ product[1] }} ₽</span> <!-- Price -->
+            <span>{{ 'В наличии' if product[4] == '1' else 'Нет в наличии' }}</span> <!-- Availability -->
+            <!-- Replace the Delete button with Add button -->
+            <button class="add-button" onclick="window.location.href='{{ url_for('add_product', id=product[0]) }}'">Добавить</button>
+        </li>
+    </ul>
+    {% endfor %}
+</div>
+<script>
+  const addModal = document.getElementById('addModal');
+
+  function openModal() {
+    addModal.style.display = 'block';
+  }
+
+  function closeModal() {
+    addModal.style.display = 'none';
+  }
+
+  function openEditModal(product) {
+
+  document.getElementById('edit_product_id').value = product.id;
+  console.log(product.id)
+  document.getElementById('edit_product_cost').value = product.cost;
+  document.getElementById('edit_product_brand').value = product.brand;
+  document.getElementById('edit_product_specifications').value = product.specifications;
+  document.getElementById('edit_product_availability').checked = product.availability == '1';
+  editModal.style.display = 'block';
+}
+
+  function closeEditModal() {
+    editModal.style.display = 'none';
+  }
+
+  // Add an event listener to each "Edit" button with the corresponding product data
+  const editButtons = document.querySelectorAll('.edit-button');
+  editButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const product = {
+        id: this.dataset.productId,
+        cost: this.dataset.productCost,
+        brand: this.dataset.productBrand,
+        specifications: this.dataset.productSpecifications,
+        availability: this.dataset.productAvailability === '1' // Convert to boolean
+      };
+      openEditModal(product);
+    });
+  });
+
+
+const deleteButtons = document.querySelectorAll('.delete-button');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      deleteProduct(this.dataset.productId)
+    });
+  });
+
+function deleteProduct(id) {
+  if (confirm("Вы уверены, что хотите удалить этот продукт?")) {
+    // Отправляем запрос на сервер Flask для удаления продукта с указанным ID
+    fetch(`/delete_product/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          // Если удаление прошло успешно, перезагрузим страницу
+          window.location.reload();
+        } else {
+          // Обработка ошибки удаления (можно добавить уведомление)
+          console.error('Ошибка удаления продукта');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка сети', error);
+      });
+  }
+}
+
+
+</script>
+</body>
+</html>

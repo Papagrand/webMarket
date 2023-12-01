@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Interface</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+  }
+  .chat-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+  .client-info {
+    background-color: #eef2f7;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .client-info h3, .client-info p {
+    margin: 5px 0;
+  }
+  .input-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .chat-input{
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    height: 160px;
+  }
+  .send-button {
+    padding: 10px 20px;
+    border: none;
+    height: 50px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    background-color: #4CAF50;
+  }
+  .history-button {
+    padding: 10px 20px;
+    border: none;
+    margin-top: 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    background-color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="client-info">
+    <h3>Личный кабинет клиента</h3>
+    <p>ФИО: {{client[0]}}</p>
+    <p>Баллы: {{client[1]}}</p>
+  </div>
+  <div class="input-group">
+    <input type="text" class="chat-input" placeholder="Напишите вашу заявку...">
+    <button class="send-button">Отправить</button>
+  </div>
+  <a href="{{ url_for('showOrdersHistory') }}" class="history-button">История покупок</a>
+</div>
+
+</body>
+</html>

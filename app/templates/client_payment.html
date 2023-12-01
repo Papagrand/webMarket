@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оплата заказа</title>
+<style>
+  /* Стилизация для имитации внешнего вида на скриншоте */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6e6e6;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 350px;
+    margin: auto;
+    border: 2px solid #007bff; /* Голубая рамка вокруг контейнера */
+  }
+  .header {
+    font-size: 24px; /* Увеличенный размер шрифта для заголовка */
+    color: #333;
+    margin-bottom: 20px;
+  }
+  .information {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  .product-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px; /* Дополнительный отступ снизу */
+  }
+  .product-list li {
+    background-color: #eee;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .button {
+    display: block;
+    width: calc(100% - 40px); /* Вычитаем padding, чтобы кнопка не выходила за рамки контейнера */
+    padding: 20px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 20px; /* Закругленные углы для кнопки */
+    color: white;
+    background-color: #28a745; /* Зеленый фон для кнопки */
+    font-size: 32px; /* Увеличенный размер шрифта для текста кнопки */
+    text-align: center;
+    text-transform: uppercase; /* Все буквы заглавные */
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    Заказ №228
+  </div>
+  <div class="information">
+    <p>ФИО: Дашарад Д.В.</p>
+    <p>Телефон: +79882561024</p>
+  </div>
+  <ul class="product-list">
+    <li>GTX 1030</li>
+    <li>G4560</li>
+    <li>4 GB RAM</li>
+  </ul>
+  <button class="button">Оплатить</button>
+</div>
+</body>
+</html>

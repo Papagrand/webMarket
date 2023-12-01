@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Запрос игровой сборки</title>
+<style>
+  /* Стилизация для имитации внешнего вида на скриншоте */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6e6e6;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 350px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Тень для контейнера */
+  }
+  .input-field {
+    background-color: #f2f2f2;
+    border: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: calc(100% - 20px); /* Вычитаем padding */
+  }
+  .product-list {
+    list-style: none;
+    padding: 0;
+  }
+  .product-list li {
+    background-color: #f2f2f2;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+  }
+  .add-product {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ccc;
+    color: #333;
+    border-radius: 5px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+  }
+  .submit-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #555;
+    color: white;
+    border-radius: 20px; /* Закругленные углы для кнопки */
+    border: none;
+    cursor: pointer;
+  }
+  .remove-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <input type="text" class="input-field" value="Запрос">
+  <div>
+    <p>Хочу игровую сборку</p>
+    <ul class="product-list">
+      <li><span>GTX 1030</span> <button class="remove-button">-</button></li>
+      <li><span>G4560</span> <button class="remove-button">-</button></li>
+      <li><span>4 GB RAM</span> <button class="remove-button">-</button></li>
+    </ul>
+    <button class="add-product">+</button>
+  </div>
+  <button class="submit-button">Отправить</button>
+</div>
+</body>
+</html>

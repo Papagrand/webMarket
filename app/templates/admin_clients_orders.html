@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Orders</title>
+<style>
+    .container {
+        width: 80%;
+        margin: auto;
+        padding: 20px;
+    }
+    .order-header {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }
+    .order-item {
+        background-color: #f4f4f4;
+        margin: 5px 0;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="order-header">
+        Заказы клиентов
+    </div>
+    {% for order in orders %}
+    <button class="order-item" onClick="window.location.href='{{ url_for('showOrderInfo', id=order[1]) }}'" type="button">
+        Заказ № {{ order[1] }}
+    </button>
+    {% endfor %}
+</div>
+</body>
+</html>
