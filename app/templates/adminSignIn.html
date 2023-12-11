@@ -40,7 +40,7 @@
 
 <div class="container">
     <form action="{{ url_for('adminSignIn') }}" method="post">
-        <input type="text" name="fsc" placeholder="Номер телефона" required>
+        <input type="text" name="fsc" placeholder="ФИО(Фамилия И.О.)" required>
         <input type="password" name="password" placeholder="Пароль" required>
         <input type="submit" value="Войти" class="login-btn">
         <a href="{{ url_for('client_sign_in') }}" class="client-link">Вход для клиентов</a>

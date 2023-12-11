@@ -2,6 +2,7 @@ import os
 import flask.cli
 import psycopg2
 from flask import Flask , render_template , request , redirect , url_for , flash , session , jsonify
+from psycopg2 import IntegrityError, OperationalError  # Assuming you are using psycopg2
 
 app = Flask(__name__)
 
@@ -135,6 +136,42 @@ def showProducts ():
     return render_template('admin_products.html' , products=products)
 
 
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    # Get the order details from the form submission
+    order_details = request.form['order_details']
+
+    # Retrieve the client's ID from the session
+    id_client = session['id_client']
+
+    # Set a default value for id_employee
+    id_employee = 1
+
+    # Connect to the database
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Insert the new order into the database
+    cur.execute('''
+        INSERT INTO application (order_details, id_client, id_employee)
+        VALUES (%s, %s, %s) RETURNING id_application;
+    ''', (order_details, id_client, id_employee))
+
+    # Get the generated id_application from the INSERT operation
+    id_application = cur.fetchone()[0]
+
+    # Commit the transaction
+    conn.commit()
+
+    # Close the cursor and the database connection
+    cur.close()
+    conn.close()
+
+    # Redirect the client to their order history page or another appropriate page
+    flash('Order submitted successfully! Your order ID is: {}'.format(id_application), 'success')
+    return redirect(url_for('showOrdersHistory'))
+
+
 @app.route('/add_product' , methods=['POST'])
 def add_product ():
     try:
@@ -234,6 +271,7 @@ def showOrders():
 
 @app.route('/order/<int:id>')
 def showOrderInfo(id):
+    session['id_application'] = id #Странная тема!
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -241,7 +279,21 @@ def showOrderInfo(id):
     cur.execute("SELECT * FROM application WHERE id_application = %s", (id,))
     order = cur.fetchone()
     cur.close()
-    return render_template("admin_add_product.html" , application=order)
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+            SELECT pd.id_product, pd.cost, pd.brand, pd.specifications, pd.availability
+            FROM collected_product cp
+            JOIN product_description pd ON cp.id_product = pd.id_product
+            WHERE cp.id_application = %s
+        ''' , (id ,))  # Предполагается, что id_application хранится в сессии
+    products = cur.fetchall()
+    print(products)
+    cur.close()
+    conn.close()
+
+    return render_template("admin_add_product.html" , application=order, products = products)
 
 
 @app.route('/delete_product/<int:product_id>', methods=['DELETE'])
@@ -282,6 +334,56 @@ def addProduct():
     cur.close()
     print(products)
     return render_template('add_in_application.html', products=products)
+
+
+@app.route('/add_product_to_application/<int:id_product>', methods=['POST'])
+def add_product_to_application(id_product):
+    id_application = session.get('id_application')
+    if not id_application:
+        flash('ID приложения не установлен в сессии.', 'error')
+        return redirect(request.referrer)  # Возврат на предыдущую страницу
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO collected_product (id_product, id_application) VALUES (%s, %s)',
+                    (id_product, id_application))
+        conn.commit()
+        flash('Продукт успешно добавлен в приложение.', 'success')
+    except IntegrityError:
+        conn.rollback()
+        flash('Этот продукт уже добавлен в приложение.', 'error')
+    except Exception as e:
+        conn.rollback()
+        flash('Произошла ошибка: {}'.format(e), 'error')
+    finally:
+        cur.close()
+        conn.close()
+
+    return redirect(f'http://127.0.0.1:5000/order/{id_application}')
+
+@app.route('/delete_product_from_application/<int:id_product>', methods=['POST'])
+def delete_product_from_application(id_product):
+    id_application = session.get('id_application')
+    if not id_application:
+        flash('ID приложения не установлен в сессии.', 'error')
+        return redirect(url_for('admin_add_product'))  # Или другой endpoint, если требуется
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute('DELETE FROM collected_product WHERE id_product = %s AND id_application = %s',
+                    (id_product, id_application))
+        conn.commit()
+        flash('Продукт успешно удален из приложения.', 'success')
+    except Exception as e:
+        conn.rollback()
+        flash('Произошла ошибка при удалении продукта: {}'.format(e), 'error')
+    finally:
+        cur.close()
+        conn.close()
+
+    return jsonify({'status': 'success', 'message': 'Продукт удален'}), 200
 
 
 

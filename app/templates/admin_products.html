@@ -32,7 +32,7 @@
   }
   .product-list li {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr 0.5fr; /* Распределение места между колонками */
+  grid-template-columns: 1fr 3fr 1fr 1fr 0.5fr 0.5fr; /* Распределение места между колонками */
   gap: 10px; /* Отступ между колонками */
   align-items: center;
   background-color: #f2f2f2;
@@ -188,25 +188,29 @@
     <div class="header">
         Товары
     </div>
-    {% for product in products %}
+    <div class="filter-section">
+        <input type="text" id="brandFilter" placeholder="Введите бренд">
+        <button onclick="filterByBrand()">Фильтровать</button>
+    </div>
     <ul class="product-list">
-        <span>{{ product[0] }}</span> <!-- ID продукта -->
-        <li>
-            <span>{{ product[3] }}</span> <!-- Характеристики продукта -->
-            <span>{{ product[2] }}</span> <!-- Бренд -->
-            <span>{{ product[1] }} ₽</span> <!-- Цена -->
-            <span>{{ 'В наличии' if product[4] == '1' else 'Нет в наличии' }}</span> <!-- Наличие -->
-            <!-- Кнопки редактирования и удаления -->
-            <div>
-                <button class="edit-button" data-product-id="{{ product[0] }}" data-product-cost="{{ product[1] }}"
-                    data-product-brand="{{ product[2] }}" data-product-specifications="{{ product[3] }}"
-                    data-product-availability="{{ product[4] }}">Редактировать
-            </button>
-                <button class="delete-button" data-product-id="{{ product[0] }}">Удалить</button>
-            </div>
-        </li>
-    </ul>
+        {% for product in products %}
+            <li>
+                <span>{{ product[0] }}</span>
+                <span>{{ product[3] }}</span> <!-- Характеристики продукта -->
+                <span>{{ product[2] }}</span> <!-- Бренд -->
+                <span>{{ product[1] }} ₽</span> <!-- Цена -->
+                <span>{{ 'В наличии' if product[4] == '1' else 'Нет в наличии' }}</span> <!-- Наличие -->
+                <!-- Кнопки редактирования и удаления -->
+                <div>
+                    <button class="edit-button" data-product-id="{{ product[0] }}" data-product-cost="{{ product[1] }}"
+                        data-product-brand="{{ product[2] }}" data-product-specifications="{{ product[3] }}"
+                        data-product-availability="{{ product[4] }}">Редактировать
+                </button>
+                    <button class="delete-button" data-product-id="{{ product[0] }}">Удалить</button>
+                </div>
+            </li>
     {% endfor %}
+    </ul>
 </div>
 <script>
   const addModal = document.getElementById('addModal');
@@ -218,6 +222,27 @@
   function closeModal() {
     addModal.style.display = 'none';
   }
+
+  function filterByBrand() {
+  var input, filter, ul, li, span, i, txtValue;
+  input = document.getElementById('brandFilter');
+  filter = input.value.toUpperCase();
+  ul = document.getElementsByClassName("product-list")[0];
+  li = ul.getElementsByTagName('li');
+
+  for (i = 0; i < li.length; i++) {
+      // Предполагаем, что бренд указан во 3 span каждого li
+      span = li[i].getElementsByTagName("span")[2];
+      txtValue = span.textContent || span.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+      } else {
+          li[i].style.display = "none";
+      }
+  }
+}
+
+
 
   function openEditModal(product) {
 

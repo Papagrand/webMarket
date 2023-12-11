@@ -146,89 +146,21 @@
         Товары
     </div>
     {% for product in products %}
-    <ul class="product-list">
-        <li>
-            <span>{{ product[3] }}</span> <!-- Product specifications -->
-            <span>{{ product[2] }}</span> <!-- Brand -->
-            <span>{{ product[1] }} ₽</span> <!-- Price -->
-            <span>{{ 'В наличии' if product[4] == '1' else 'Нет в наличии' }}</span> <!-- Availability -->
-            <!-- Replace the Delete button with Add button -->
-            <button class="add-button" onclick="window.location.href='{{ url_for('add_product', id=product[0]) }}'">Добавить</button>
-        </li>
-    </ul>
+    <form action="{{ url_for('add_product_to_application', id_product=product[0]) }}" method="post">
+        <ul class="product-list">
+            <li>
+                <input type="hidden" name="id_product" value="{{ product[0] }}"> <!-- Assuming product[0] is the id_product -->
+                <span>{{ product[3] }}</span> <!-- Product specifications -->
+                <span>{{ product[2] }}</span> <!-- Brand -->
+                <span>{{ product[1] }} ₽</span> <!-- Price -->
+                <span>{{ 'В наличии' if product[4] else 'Нет в наличии' }}</span> <!-- Availability -->
+                <button class="add-button" type="submit">Добавить</button>
+            </li>
+        </ul>
+    </form>
     {% endfor %}
+
+
 </div>
-<script>
-  const addModal = document.getElementById('addModal');
-
-  function openModal() {
-    addModal.style.display = 'block';
-  }
-
-  function closeModal() {
-    addModal.style.display = 'none';
-  }
-
-  function openEditModal(product) {
-
-  document.getElementById('edit_product_id').value = product.id;
-  console.log(product.id)
-  document.getElementById('edit_product_cost').value = product.cost;
-  document.getElementById('edit_product_brand').value = product.brand;
-  document.getElementById('edit_product_specifications').value = product.specifications;
-  document.getElementById('edit_product_availability').checked = product.availability == '1';
-  editModal.style.display = 'block';
-}
-
-  function closeEditModal() {
-    editModal.style.display = 'none';
-  }
-
-  // Add an event listener to each "Edit" button with the corresponding product data
-  const editButtons = document.querySelectorAll('.edit-button');
-  editButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const product = {
-        id: this.dataset.productId,
-        cost: this.dataset.productCost,
-        brand: this.dataset.productBrand,
-        specifications: this.dataset.productSpecifications,
-        availability: this.dataset.productAvailability === '1' // Convert to boolean
-      };
-      openEditModal(product);
-    });
-  });
-
-
-const deleteButtons = document.querySelectorAll('.delete-button');
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      deleteProduct(this.dataset.productId)
-    });
-  });
-
-function deleteProduct(id) {
-  if (confirm("Вы уверены, что хотите удалить этот продукт?")) {
-    // Отправляем запрос на сервер Flask для удаления продукта с указанным ID
-    fetch(`/delete_product/${id}`, {
-      method: 'DELETE',
-    })
-      .then(response => {
-        if (response.ok) {
-          // Если удаление прошло успешно, перезагрузим страницу
-          window.location.reload();
-        } else {
-          // Обработка ошибки удаления (можно добавить уведомление)
-          console.error('Ошибка удаления продукта');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка сети', error);
-      });
-  }
-}
-
-
-</script>
 </body>
 </html>

@@ -62,11 +62,45 @@
         Пожелания клиента: {{ application[0] }}
     </div>
     <ul class="product-list">
-        <!-- Add Product Button -->
-        <li>
-            <a href="{{ url_for('addProduct') }}" class="add-button">Добавить товар</a>
-        </li>
+        {% for product in products %}
+            <li>
+                <span>{{ product[3] }}</span> <!-- specifications -->
+                <span>{{ product[2] }}</span> <!-- brand -->
+                <span>{{ product[1] }} ₽</span> <!-- cost -->
+                <span>{{ 'В наличии' if product[4] else 'Нет в наличии' }}</span> <!-- availability -->
+                <button class="delete-button" data-id="{{ product[0] }}">Удалить</button>
+            </li>
+        {% endfor %}
+        {% if not products %}
+            <li>
+                <a href="{{ url_for('addProduct') }}" class="add-button">Добавить товар</a>
+            </li>
+        {% endif %}
     </ul>
+
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const productId = this.getAttribute('data-id');
+                fetch(`/delete_product_from_application/${productId}`, {
+                    method: 'POST',
+                    // Дополнительные заголовки и токены CSRF, если требуется
+                }).then(response => {
+                    if (response.ok) {
+                        // Удалить элемент списка, если продукт был успешно удален
+                        this.parentElement.remove();
+                        location.reload();
+                    } else {
+                        alert('Ошибка при удалении продукта.');
+                    }
+                });
+            });
+        });
+    });
+</script>
 </body>
 </html>
